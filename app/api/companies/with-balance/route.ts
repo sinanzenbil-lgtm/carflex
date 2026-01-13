@@ -25,10 +25,22 @@ export async function GET() {
     )
 
     return NextResponse.json(companiesWithBalance)
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error fetching companies with balance:', error)
+    
+    // Check if it's a Prisma initialization error
+    if (error?.name === 'PrismaClientInitializationError') {
+      return NextResponse.json(
+        { 
+          error: 'Database connection error. Please check DATABASE_URL environment variable.',
+          details: process.env.NODE_ENV === 'development' ? error.message : undefined
+        },
+        { status: 500 }
+      )
+    }
+    
     return NextResponse.json(
-      { error: 'Failed to fetch companies' },
+      { error: 'Failed to fetch companies', details: process.env.NODE_ENV === 'development' ? error.message : undefined },
       { status: 500 }
     )
   }
