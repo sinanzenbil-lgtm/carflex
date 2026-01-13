@@ -1,0 +1,348 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  password      String
+  name          String?  // Yetkili kişi ad soyad
+  companyName  String?  // Firma ismi
+  taxId         String?  @unique // Vergi numarası
+  phone         String?  // Telefon numarası
+  logoUrl       String?  // Logo URL'si
+  role          String   @default("user") // super_admin veya user
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  vehicles      Vehicle[]
+  rentals       Rental[]
+}
+
+model Vehicle {
+  id                String   @id @default(cuid())
+  userId            String?  // Kullanıcı ID (null ise admin'e ait)
+  brand             String   // Marka
+  model             String   // Model
+  year              Int      // Yıl
+  transmission      String   // Şanzıman (Manuel/Otomatik)
+  purchasePrice     Float    // Satın alma tutarı
+  licensePlate      String   @unique // Plaka
+  licenseNumber     String?  // Ruhsat numarası
+  chassisNumber     String?  // Şase numarası
+  engineNumber      String?  // Motor numarası
+  color             String?  // Renk
+  damagedParts      String?  // Hasar kısımları (JSON)
+  paintedParts      String?  // Boyalı kısımları (JSON)
+  replacedParts     String?  // Değişen kısımları (JSON)
+  inspectionReport  String?  // Ekspertiz raporu
+  inspectionEndDate  DateTime? // Muayene bitiş tarihi
+  insuranceEndDate  DateTime? // Trafik sigortası bitiş tarihi
+  kaskoEndDate      DateTime? // Kasko bitiş tarihi
+  nextMaintenanceKm Float?   // Bir sonraki bakım kilometresi
+  licenseDocument   String?  // Ruhsat belgesi (base64 string)
+  insurancePolicy   String?  // Trafik sigortası poliçesi (base64 string)
+  lastKilometer     Float    @default(0) // Son kilometre
+  images            String?  // Fotoğraflar (JSON string)
+  isActive          Boolean  @default(true)
+  isLongTerm        Boolean  @default(true) // Uzun dönem mi kısa dönem mi
+  isPublished       Boolean  @default(false) // Ana sayfada yayımlansın mı
+  dailyPrice        Float?   // Günlük kiralama fiyatı
+  monthlyPrice      Float?   // Aylık kiralama fiyatı
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User?    @relation(fields: [userId], references: [id])
+  rentalVehicles    RentalVehicle[]
+  hgsPassages       HGSPassage[]
+  maintenances      Maintenance[]
+  damages           Damage[]
+  inspections       Inspection[]
+  trafficInsurances TrafficInsurance[]
+  kaskos            Kasko[]
+}
+
+model Company {
+  id                String   @id @default(cuid())
+  taxId             String   @unique // Vergi kimlik numarası
+  name              String   // Firma unvanı
+  contactPerson     String?  // İletişim kişisi
+  phone             String?  // Telefon
+  email             String?
+  address           String?  // Adres
+  createdAt         DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  rentals           Rental[]
+  payments          Payment[]
+  hgsPassages       HGSPassage[]
+  maintenances      Maintenance[]
+  damages           Damage[]
+  accountEntries    AccountEntry[]
+}
+
+model Rental {
+  id                String   @id @default(cuid())
+  userId            String?  // Kullanıcı ID (null ise admin'e ait)
+  companyId         String
+  startDate         DateTime // Kira başlangıç tarihi
+  renewalDate       DateTime? // Kira yenileme tarihi
+  endDate           DateTime? // Kira bitiş tarihi
+  renewalPeriod     Int?     // Kira yenileme periyodu (gün)
+  amount            Float    // Kira tutarı (KDV hariç)
+  vatRate           Float    @default(20) // KDV oranı (%)
+  vatAmount         Float    // KDV tutarı
+  totalAmount        Float    // Toplam tutar (KDV dahil)
+  vadeDays          Int?     @default(0) // Vade günü
+  expectedIncomeDate DateTime? // Beklenen gelir tarihi
+  status            String   @default("active") // active, completed, cancelled
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  user              User?    @relation(fields: [userId], references: [id])
+  company           Company  @relation(fields: [companyId], references: [id])
+  vehicles          RentalVehicle[]
+  payments          Payment[]
+  accountEntries    AccountEntry[]
+}
+
+model RentalVehicle {
+  id        String  @id @default(cuid())
+  rentalId String
+  vehicleId String
+  price     Float   // Bu araç için kira fiyatı
+  
+  rental    Rental  @relation(fields: [rentalId], references: [id], onDelete: Cascade)
+  vehicle   Vehicle @relation(fields: [vehicleId], references: [id])
+  
+  @@unique([rentalId, vehicleId])
+}
+
+model Payment {
+  id            String   @id @default(cuid())
+  rentalId     String?
+  companyId    String
+  amount       Float    // Tahsilat tutarı
+  paymentDate  DateTime // Tahsilat tarihi
+  paymentType  String   // nakit, kredi_karti, banka
+  bankId       String?  // Banka ID (eğer banka ise)
+  cashRegisterId String? // Kasa ID (eğer nakit ise)
+  posDeviceId  String?  // POS cihazı ID (eğer kredi kartı ise)
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  rental       Rental?  @relation(fields: [rentalId], references: [id])
+  company      Company  @relation(fields: [companyId], references: [id])
+  bank         Bank?    @relation(fields: [bankId], references: [id])
+  cashRegister CashRegister? @relation(fields: [cashRegisterId], references: [id])
+  posDevice    POSDevice? @relation(fields: [posDeviceId], references: [id])
+  accountEntries AccountEntry[]
+}
+
+model Bank {
+  id        String   @id @default(cuid())
+  name      String   @unique // Banka ismi
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  payments  Payment[]
+}
+
+model CashRegister {
+  id        String   @id @default(cuid())
+  name      String   @unique // Kasa ismi
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  payments  Payment[]
+}
+
+model POSDevice {
+  id        String   @id @default(cuid())
+  name      String   @unique // POS cihazı ismi
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  payments  Payment[]
+}
+
+model HGSPassage {
+  id            String   @id @default(cuid())
+  vehicleId    String
+  companyId    String
+  passageDate  DateTime // Geçiş tarihi
+  amount       Float    // Geçiş tutarı
+  location     String?  // Geçiş yeri
+  images       String?  // Fotoğraflar (JSON string)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  
+  vehicle      Vehicle  @relation(fields: [vehicleId], references: [id])
+  company      Company  @relation(fields: [companyId], references: [id])
+  accountEntries AccountEntry[]
+}
+
+model Credit {
+  id            String   @id @default(cuid())
+  bankName      String   // Banka ismi
+  totalAmount   Float    // Toplam kredi tutarı
+  interestRate  Float    // Faiz oranı
+  principal  Float    // Ana para
+  startDate     DateTime // Başlangıç tarihi
+  installmentCount Int   // Taksit sayısı
+  monthlyPayment Float   // Aylık ödeme tutarı
+  paymentDay    Int      // Ödeme günü (ayın kaçı)
+  status        String   @default("active") // active, completed
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  installments  CreditInstallment[]
+}
+
+model CreditInstallment {
+  id            String   @id @default(cuid())
+  creditId      String
+  installmentNumber Int  // Taksit numarası
+  dueDate       DateTime // Vade tarihi
+  principal     Float    // Ana para
+  interest      Float    // Faiz
+  total         Float    // Toplam
+  isPaid        Boolean  @default(false)
+  paidDate      DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  credit        Credit   @relation(fields: [creditId], references: [id], onDelete: Cascade)
+}
+
+model Income {
+  id            String   @id @default(cuid())
+  title         String   // Gelir başlığı
+  amount        Float    // Tutar
+  date          DateTime // Tarih
+  source        String?  // Kaynak (rental, other)
+  rentalId      String?  // Kiralama ID (eğer kiralama kaynaklı ise)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Expense {
+  id            String   @id @default(cuid())
+  title         String   // Gider başlığı
+  amount        Float    // Tutar
+  date          DateTime // Tarih
+  category      String?  // Kategori
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Maintenance {
+  id                String   @id @default(cuid())
+  vehicleId         String
+  companyId         String
+  maintenanceDate   DateTime // Bakım tarihi
+  type              String   // bakim, onarim
+  price             Float    // Fiyat (KDV dahil)
+  kilometer         Float    // Bakım kilometresi
+  nextMaintenanceKm Float?   // Bir sonraki bakım kilometresi
+  details           String?   // Açıklama (ne yapıldı)
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  vehicle           Vehicle  @relation(fields: [vehicleId], references: [id])
+  company           Company  @relation(fields: [companyId], references: [id])
+}
+
+model Damage {
+  id            String   @id @default(cuid())
+  vehicleId     String
+  companyId     String
+  damageDate    DateTime // Hasar tarihi
+  kilometer     Float    // Kilometre
+  description   String?  // Açıklama
+  images        String?  // Fotoğraflar (JSON string)
+  repairCost    Float?   // Onarım maliyeti
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
+  company       Company  @relation(fields: [companyId], references: [id])
+}
+
+model Inspection {
+  id            String   @id @default(cuid())
+  vehicleId     String
+  inspectionDate DateTime // Muayene tarihi
+  nextInspectionDate DateTime? // Sonraki muayene tarihi (otomatik 2 yıl sonra)
+  result        String?  // Sonuç (geçti/kaldı)
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  vehicle       Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+model TrafficInsurance {
+  id                String   @id @default(cuid())
+  vehicleId         String
+  companyName       String   // Trafik sigortası firması
+  policyNumber      String   // Poliçe numarası
+  startDate         DateTime // Sigorta başlangıç tarihi
+  endDate           DateTime // Sigorta bitiş tarihi
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  vehicle           Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+model Kasko {
+  id                String   @id @default(cuid())
+  vehicleId         String
+  companyName       String   // Kasko firması
+  policyNumber      String   // Poliçe numarası
+  startDate         DateTime // Kasko başlangıç tarihi
+  endDate           DateTime // Kasko bitiş tarihi
+  notes             String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  vehicle           Vehicle  @relation(fields: [vehicleId], references: [id])
+}
+
+// Cari hesap hareketleri (ekstre)
+model AccountEntry {
+  id            String   @id @default(cuid())
+  companyId     String
+  type          String   // debit (borç), credit (alacak)
+  amount        Float    // Tutar
+  date          DateTime // Tarih
+  description   String?  // Açıklama
+  sourceType    String?  // rental, payment, hgs, maintenance, damage
+  sourceId      String?  // Kaynak ID
+  rentalId      String?
+  paymentId     String?
+  hgsPassageId  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  company       Company  @relation(fields: [companyId], references: [id])
+  rental        Rental?  @relation(fields: [rentalId], references: [id])
+  payment       Payment? @relation(fields: [paymentId], references: [id])
+  hgsPassage    HGSPassage? @relation(fields: [hgsPassageId], references: [id])
+}
