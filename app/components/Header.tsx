@@ -24,9 +24,9 @@ export default function Header() {
             <Image
               src="/logo.png"
               alt="CarFlex"
-              width={220}
-              height={64}
-              className="h-12 w-auto"
+              width={260}
+              height={72}
+              className="h-14 w-auto"
               priority
             />
           </Link>
