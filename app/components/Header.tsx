@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useState } from 'react'
-import { Menu, X, Car } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -19,17 +20,15 @@ export default function Header() {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 group">
-            <div className="bg-lime-400 p-2 rounded-lg group-hover:bg-lime-500 transition-colors">
-              <Car className="w-6 h-6 text-slate-900" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold">
-                <span className="text-slate-900">Carfle</span>
-                <span className="text-lime-500">X</span>
-              </h1>
-              <p className="text-xs text-gray-500">Araç Kiralama</p>
-            </div>
+          <Link href="/" className="flex items-center gap-3 group">
+            <Image
+              src="/logo.png"
+              alt="CarFlex"
+              width={220}
+              height={64}
+              className="h-12 w-auto"
+              priority
+            />
           </Link>
 
           {/* Desktop Navigation */}

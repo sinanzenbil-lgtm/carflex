@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Car, Calendar, Shield, Clock, CheckCircle, ArrowRight, Star, Users, Award, TrendingUp } from 'lucide-react'
 
 export default function Home() {
@@ -15,16 +16,14 @@ export default function Home() {
         <div className="container mx-auto px-4 py-32 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <div className="mb-8">
-              <h1 className="text-6xl md:text-8xl font-bold mb-6">
-                <span className="text-white">Carfle</span>
-                <span className="text-lime-400 relative inline-block">
-                  X
-                  <span className="absolute inset-0 flex items-center justify-center">
-                    <span className="w-full h-0.5 bg-lime-400 opacity-50 transform rotate-45"></span>
-                    <span className="w-full h-0.5 bg-lime-400 opacity-50 transform -rotate-45 absolute"></span>
-                  </span>
-                </span>
-              </h1>
+              <Image
+                src="/logo.png"
+                alt="CarFlex"
+                width={600}
+                height={160}
+                className="mx-auto h-20 md:h-28 w-auto"
+                priority
+              />
             </div>
             
             <p className="text-2xl md:text-3xl text-gray-200 mb-6 font-light">

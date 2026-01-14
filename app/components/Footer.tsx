@@ -1,5 +1,6 @@
 import Link from 'next/link'
-import { Car, Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
+import Image from 'next/image'
+import { Phone, Mail, MapPin, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -8,14 +9,14 @@ export default function Footer() {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <div className="bg-lime-400 p-2 rounded-lg">
-                <Car className="w-6 h-6 text-slate-900" />
-              </div>
-              <h3 className="text-2xl font-bold text-white">
-                <span>Carfle</span>
-                <span className="text-lime-400">X</span>
-              </h3>
+            <div className="mb-4">
+              <Image
+                src="/logo.png"
+                alt="CarFlex"
+                width={220}
+                height={64}
+                className="h-12 w-auto"
+              />
             </div>
             <p className="text-gray-400 mb-4">
               Profesyonel araç kiralama hizmetleri ile işletmenizin ihtiyaçlarını karşılıyoruz.
