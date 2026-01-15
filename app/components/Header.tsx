@@ -18,15 +18,15 @@ export default function Header() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[#0a1930] shadow-md">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-24">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
             <Image
               src="/logo.png"
               alt="CarFlex"
-              width={420}
-              height={120}
-              className="h-20 w-auto"
+              width={480}
+              height={136}
+              className="h-24 w-auto"
               priority
             />
           </Link>
