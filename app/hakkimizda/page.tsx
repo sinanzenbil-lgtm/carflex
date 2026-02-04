@@ -9,8 +9,9 @@ export default function Hakkimizda() {
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">Hakkımızda</h1>
             <p className="text-xl text-gray-200 leading-relaxed">
-              CarFlex olarak, 15 yılı aşkın deneyimimizle Türkiye'nin önde gelen araç kiralama 
-              şirketlerinden biriyiz. İşletmenizin ihtiyaçlarına özel çözümler sunuyoruz.
+              CarFlex olarak, uzun dönem filo kiralama ve operasyonel yönetimde uzmanlaşmış
+              ekibimizle işletmenize özel çözümler sunuyoruz. Sürdürülebilirlik ve elektrikli
+              araç dönüşümünü işimizin merkezine alıyoruz.
             </p>
           </div>
         </div>
@@ -26,9 +27,8 @@ export default function Hakkimizda() {
               </div>
               <h2 className="text-3xl font-bold text-slate-900 mb-4">Misyonumuz</h2>
               <p className="text-gray-700 leading-relaxed">
-                İşletmelerin araç kiralama ihtiyaçlarını en uygun fiyatlarla, güvenilir ve 
-                profesyonel hizmet anlayışıyla karşılamak. Müşteri memnuniyetini ön planda 
-                tutarak, sektörde öncü bir konumda yer almak.
+                İşletmelerin filo ihtiyaçlarını güvenilir ve şeffaf bir hizmetle karşılamak,
+                operasyonel süreçleri sadeleştirerek müşterilerimizin işine odaklanmasını sağlamak.
               </p>
             </div>
 
@@ -38,9 +38,8 @@ export default function Hakkimizda() {
               </div>
               <h2 className="text-3xl font-bold text-slate-900 mb-4">Vizyonumuz</h2>
               <p className="text-gray-700 leading-relaxed">
-                Türkiye'nin en güvenilir ve tercih edilen araç kiralama şirketi olmak. 
-                Teknolojik yenilikleri takip ederek, müşterilerimize en iyi hizmeti sunmak 
-                ve sektörde sürdürülebilir büyüme sağlamak.
+                Türkiye'nin en güvenilir filo çözüm ortağı olmak; dijitalleşme ve
+                elektrikli araç dönüşümüyle sürdürülebilir büyümeyi desteklemek.
               </p>
             </div>
           </div>
