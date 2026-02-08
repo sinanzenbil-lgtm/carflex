@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import { blogPosts } from '@/lib/blog'
-import { Car, Calendar, Shield, Clock, CheckCircle, ArrowRight, Star, Users, Award, TrendingUp, BatteryCharging } from 'lucide-react'
+import { Car, Calendar, Shield, Clock, CheckCircle, ArrowRight, Users, Award, TrendingUp, BatteryCharging } from 'lucide-react'
 
 export default function Home() {
   const latestPosts = [...blogPosts]
@@ -17,7 +17,9 @@ export default function Home() {
       image: '/slide-3.png',
       imageAlt: 'Elektrikli araç programı görseli',
       link: '/elektrikli-araclar',
-      buttonText: 'Programı İncele'
+      buttonText: 'Programı İncele',
+      secondaryLink: '/filo-analizi',
+      secondaryButtonText: 'Analiz İste'
     },
     {
       title: 'Kurumsal Kiralamada En Ekonomik Araçlar',
@@ -48,7 +50,26 @@ export default function Home() {
 
   return (
     <div className="relative bg-white">
-      <div className="max-w-7xl mx-auto">
+      {/* Background X watermark — top right */}
+      <Image
+        src="/carflex-x-bg.png"
+        alt=""
+        width={700}
+        height={700}
+        className="pointer-events-none fixed -top-[120px] right-0 w-[520px] h-[520px] md:w-[700px] md:h-[700px] opacity-30 z-0 select-none object-contain"
+        aria-hidden="true"
+        priority
+      />
+      {/* Background X watermark — left side */}
+      <Image
+        src="/carflex-x-bg.png"
+        alt=""
+        width={700}
+        height={700}
+        className="pointer-events-none fixed left-[-200px] top-[40%] w-[600px] h-[600px] md:w-[700px] md:h-[700px] opacity-20 z-0 select-none object-contain hidden lg:block"
+        aria-hidden="true"
+      />
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Hero Section */}
         <section className="relative text-slate-900 overflow-hidden -mt-4">
           <div className="px-6 md:px-8 -mt-6 relative z-10">
@@ -82,19 +103,20 @@ export default function Home() {
                         </p>
                         <div className="flex flex-col sm:flex-row gap-5 justify-start items-center">
                           <Link
-                            href="/login"
-                            target="_blank"
+                            href={slide.link}
                             className="group bg-lime-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-lime-300 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-lime-400/50 flex items-center gap-2"
                           >
                             {slide.buttonText || 'Online İşlemler'}
                             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                           </Link>
-                          <Link
-                            href="/teklif-al"
-                            className="bg-slate-900 text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-slate-800 transition-all duration-300 border border-slate-900"
-                          >
-                            Teklif Al
-                          </Link>
+                          {slide.secondaryLink && slide.secondaryButtonText ? (
+                            <Link
+                              href={slide.secondaryLink}
+                              className="bg-slate-900 text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-slate-800 transition-all duration-300 border border-slate-900"
+                            >
+                              {slide.secondaryButtonText}
+                            </Link>
+                          ) : null}
                         </div>
                       </div>
                     </div>
@@ -216,117 +238,181 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Features Section */}
-        <section className="relative py-28 bg-gradient-to-b from-slate-50 via-white to-slate-50 overflow-hidden">
-          <div className="pointer-events-none absolute -top-24 -left-16 h-96 w-96 rounded-full bg-lime-100/50 blur-[100px]"></div>
-          <div className="pointer-events-none absolute -bottom-24 -right-16 h-96 w-96 rounded-full bg-blue-100/50 blur-[100px]"></div>
-          
-          <div className="px-6 md:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
-              Kurumsal Filo <span className="text-lime-500">Çözümlerimiz</span>
-            </h2>
-            <p className="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Maliyetlerinizi öngörülebilir hale getiren, operasyon yükünü azaltan ve işletmenize değer katan profesyonel kiralama modelleri.
-            </p>
-          </div>
+        {/* Features Section — Bento Grid */}
+        <section className="py-16 md:py-20 bg-white">
+          <div className="px-6 md:px-8">
+            {/* Bento Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-12 gap-4 md:gap-5 auto-rows-auto">
 
-          <div className="grid md:grid-cols-3 gap-8 mb-20">
-            {[
-              {
-                title: 'Uzun Dönem Filo Kiralama',
-                desc: '6-48 ay arası kiralama seçenekleriyle sabit aylık bütçe, planlı bakım ve tek sözleşme yönetimi.',
-                icon: Calendar,
-                link: '/hizmetlerimiz#uzun-donem',
-                color: 'lime'
-              },
-              {
-                title: 'Kısa Dönem Destek',
-                desc: 'Proje, sezon veya geçici ihtiyaçlar için günlük-haftalık çözümler. Hızlı teklif ve anında teslimat.',
-                icon: Clock,
-                link: '/hizmetlerimiz#kisa-donem',
-                color: 'slate'
-              },
-              {
-                title: 'Elektrikli Dönüşüm',
-                desc: 'Elektrikli araçlara geçiş için analiz, araç seçimi ve şarj planı desteği. Sürdürülebilir gelecek için.',
-                icon: BatteryCharging,
-                link: '/hizmetlerimiz#elektrikli',
-                color: 'blue'
-              }
-            ].map((item, idx) => (
-              <div key={idx} className="group relative bg-white p-10 rounded-3xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-bl-full -mr-16 -mt-16 transition-all duration-500 group-hover:bg-lime-50 group-hover:scale-150 opacity-50"></div>
-                <div className={`relative mb-8 inline-flex p-4 rounded-2xl bg-slate-50 text-slate-600 group-hover:bg-lime-500 group-hover:text-white transition-all duration-500 shadow-sm`}>
-                  <item.icon className="w-8 h-8" />
+              {/* ── Başlık bloğu — sol üst, geniş */}
+              <div className="md:col-span-6 lg:col-span-5 bg-slate-900 text-white p-10 md:p-14 flex flex-col justify-between" style={{ borderRadius: '2rem' }}>
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.25em] text-lime-400 mb-5">Kurumsal Filo Çözümleri</p>
+                  <h2 className="text-3xl md:text-4xl lg:text-5xl font-black leading-[1.1] tracking-tight">
+                    Filonuzu tek merkezden yönetin.
+                  </h2>
                 </div>
-                <h3 className="relative text-2xl font-bold text-slate-900 mb-4 group-hover:text-lime-600 transition-colors">
-                  {item.title}
-                </h3>
-                <p className="relative text-slate-600 leading-relaxed mb-8">
-                  {item.desc}
+                <p className="mt-8 text-slate-400 text-base leading-relaxed max-w-md">
+                  Maliyetlerinizi öngörülebilir hale getiren, operasyon yükünü azaltan profesyonel kiralama modelleri.
                 </p>
-                <Link
-                  href={item.link}
-                  className="relative inline-flex items-center gap-2 font-bold text-slate-900 hover:text-lime-600 transition-colors group/link"
-                >
-                  Hizmeti İncele
-                  <div className="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center group-hover/link:bg-lime-500 group-hover/link:text-white transition-all">
-                    <ArrowRight className="w-4 h-4" />
+              </div>
+
+              {/* ── Rakam bloğu — sağ üst */}
+              <div className="md:col-span-3 lg:col-span-4 bg-lime-400 text-slate-900 p-10 flex flex-col justify-center" style={{ borderRadius: '2rem' }}>
+                <div className="space-y-6">
+                  <div>
+                    <div className="text-5xl md:text-6xl font-black leading-none">7/24</div>
+                    <div className="text-sm font-bold mt-1 text-slate-800">Operasyonel destek</div>
                   </div>
+                  <div className="h-px bg-slate-900/15" />
+                  <div>
+                    <div className="text-5xl md:text-6xl font-black leading-none">%70</div>
+                    <div className="text-sm font-bold mt-1 text-slate-800">Daha az operasyon yükü</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ── CTA bloğu — sağ üst köşe */}
+              <div className="md:col-span-3 lg:col-span-3 bg-slate-100 p-10 flex flex-col justify-between" style={{ borderRadius: '2rem' }}>
+                <div>
+                  <p className="text-slate-500 text-sm font-semibold mb-2">Hemen başlayın</p>
+                  <p className="text-slate-900 text-xl font-bold leading-snug">Size özel filo planı oluşturalım.</p>
+                </div>
+                <Link
+                  href="/teklif-al"
+                  className="mt-8 inline-flex items-center gap-3 bg-slate-900 text-white px-7 py-4 font-bold hover:bg-slate-800 transition-colors self-start"
+                  style={{ borderRadius: '1rem' }}
+                >
+                  Teklif Al
+                  <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
-            ))}
-          </div>
 
-          {/* Why Choose Us */}
-          <div className="relative bg-slate-900 p-12 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
-            <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full -ml-32 -mb-32 blur-3xl"></div>
-            
-            <div className="relative z-10">
-              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-                <div>
-                  <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">CarFlex Avantajları</h3>
-                  <p className="text-slate-400 text-lg max-w-xl">
-                    Operasyonel süreçlerinizi kolaylaştıran, her adımda yanınızda olan kapsamlı hizmet seti.
-                  </p>
+              {/* ── Hizmet 1 — Uzun dönem */}
+              <div className="md:col-span-3 lg:col-span-4 group bg-white border-2 border-slate-200 hover:border-lime-400 p-8 md:p-10 transition-colors duration-300" style={{ borderRadius: '2rem' }}>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="flex items-center justify-center w-12 h-12 bg-slate-900 text-white" style={{ borderRadius: '0.875rem' }}>
+                    <Calendar className="w-6 h-6" />
+                  </span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400">01</span>
                 </div>
-                <div className="hidden md:block">
-                  <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-2xl border border-white/10">
-                    <span className="text-lime-400 font-bold text-2xl">9+</span>
-                    <span className="text-white/60 ml-2">Temel Avantaj</span>
-                  </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-3">Uzun Dönem Filo Kiralama</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  6-48 ay arası kiralama, sabit aylık bütçe, planlı bakım ve tek sözleşme yönetimi.
+                </p>
+                <div className="space-y-2 mb-8">
+                  {['Sabit aylık bütçe', 'Planlı bakım yönetimi', 'Tek sözleşme / tek takip'].map((f, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-lime-500" />
+                      <span className="font-medium">{f}</span>
+                    </div>
+                  ))}
                 </div>
+                <Link href="/hizmetlerimiz#uzun-donem" className="inline-flex items-center gap-2 font-bold text-slate-900 group-hover:text-lime-600 transition-colors text-sm">
+                  Hizmeti incele <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8">
-                {[
-                  'Hızlı teklif ve sözleşme',
-                  'Kolay araç kiralama',
-                  'Sürpriz faturalar yok',
-                  'CarflexNet Filo Yönetimi',
-                  'Kesintisiz 7/24 müşteri memnuniyeti',
-                  'Sabit aylık bütçe ve maliyet kontrolü',
-                  'Kurumsal müşteri temsilcisi',
-                  'Dijital raporlama ve takip',
-                  'Türkiye geneli servis ağı'
-                ].map((feature, index) => (
-                  <div key={index} className="flex items-start gap-4 group">
-                    <div className="bg-lime-400/20 rounded-xl p-2 group-hover:bg-lime-400 transition-colors duration-300">
-                      <CheckCircle className="w-5 h-5 text-lime-400 group-hover:text-slate-900 transition-colors duration-300" />
+              {/* ── Hizmet 2 — Kısa dönem */}
+              <div className="md:col-span-3 lg:col-span-4 group bg-white border-2 border-slate-200 hover:border-slate-900 p-8 md:p-10 transition-colors duration-300" style={{ borderRadius: '2rem' }}>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="flex items-center justify-center w-12 h-12 bg-slate-900 text-white" style={{ borderRadius: '0.875rem' }}>
+                    <Clock className="w-6 h-6" />
+                  </span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400">02</span>
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-3">Kısa Dönem Destek</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Proje, sezon veya geçici ihtiyaçlar için günlük-haftalık çözümler. Hızlı teklif ve anında teslimat.
+                </p>
+                <div className="space-y-2 mb-8">
+                  {['Günlük / haftalık esneklik', 'Hızlı onay ve teslim', 'Net fiyatlandırma'].map((f, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-slate-900" />
+                      <span className="font-medium">{f}</span>
                     </div>
-                    <span className="text-slate-300 font-medium text-lg leading-tight pt-1">{feature}</span>
+                  ))}
+                </div>
+                <Link href="/hizmetlerimiz#kisa-donem" className="inline-flex items-center gap-2 font-bold text-slate-900 group-hover:text-slate-600 transition-colors text-sm">
+                  Hizmeti incele <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+              {/* ── Hizmet 3 — Elektrikli */}
+              <div className="md:col-span-6 lg:col-span-4 group bg-white border-2 border-slate-200 hover:border-lime-500 p-8 md:p-10 transition-colors duration-300" style={{ borderRadius: '2rem' }}>
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="flex items-center justify-center w-12 h-12 bg-lime-500 text-white" style={{ borderRadius: '0.875rem' }}>
+                    <BatteryCharging className="w-6 h-6" />
+                  </span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-slate-400">03</span>
+                </div>
+                <h3 className="text-2xl font-black text-slate-900 mb-3">Elektrikli Dönüşüm</h3>
+                <p className="text-slate-600 leading-relaxed mb-6">
+                  Elektrikli araçlara geçiş için analiz, araç seçimi ve şarj planı desteği. Sürdürülebilir gelecek.
+                </p>
+                <div className="space-y-2 mb-8">
+                  {['Menzil + kullanım analizi', 'Şarj altyapısı planı', 'Tasarruf ve KPI raporu'].map((f, i) => (
+                    <div key={i} className="flex items-center gap-2 text-sm text-slate-700">
+                      <span className="w-1.5 h-1.5 rounded-full bg-lime-500" />
+                      <span className="font-medium">{f}</span>
+                    </div>
+                  ))}
+                </div>
+                <Link href="/hizmetlerimiz#elektrikli" className="inline-flex items-center gap-2 font-bold text-slate-900 group-hover:text-lime-600 transition-colors text-sm">
+                  Hizmeti incele <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
+
+            </div>
+
+            {/* CarFlex Avantajları */}
+            <div className="relative bg-slate-900 p-12 md:p-16 rounded-[3rem] overflow-hidden shadow-2xl mt-10">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-lime-400/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-400/10 rounded-full -ml-32 -mb-32 blur-3xl"></div>
+              
+              <div className="relative z-10">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                  <div>
+                    <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">CarFlex Avantajları</h3>
+                    <p className="text-slate-400 text-lg max-w-xl">
+                      Operasyonel süreçlerinizi kolaylaştıran, her adımda yanınızda olan kapsamlı hizmet seti.
+                    </p>
                   </div>
-                ))}
+                  <div className="hidden md:block">
+                    <div className="bg-white/10 backdrop-blur px-6 py-3 rounded-2xl border border-white/10">
+                      <span className="text-lime-400 font-bold text-2xl">9+</span>
+                      <span className="text-white/60 ml-2">Temel Avantaj</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-8">
+                  {[
+                    'Hızlı teklif ve sözleşme',
+                    'Kolay araç kiralama',
+                    'Sürpriz faturalar yok',
+                    'CarflexNet Filo Yönetimi',
+                    'Kesintisiz 7/24 müşteri memnuniyeti',
+                    'Sabit aylık bütçe ve maliyet kontrolü',
+                    'Kurumsal müşteri temsilcisi',
+                    'Dijital raporlama ve takip',
+                    'Türkiye geneli servis ağı'
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-start gap-4 group">
+                      <div className="bg-lime-400/20 rounded-xl p-2 group-hover:bg-lime-400 transition-colors duration-300">
+                        <CheckCircle className="w-5 h-5 text-lime-400 group-hover:text-slate-900 transition-colors duration-300" />
+                      </div>
+                      <span className="text-slate-300 font-medium text-lg leading-tight pt-1">{feature}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
           </div>
         </section>
 
         {/* Electric Section */}
-        <section className="py-20 bg-white">
+        <section className="pt-0 pb-20 bg-white">
           <div className="px-6 md:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -380,37 +466,43 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-white">
+        <section className="pt-0 pb-4 bg-white">
           <div className="px-6 md:px-8">
-            <div className="max-w-4xl mx-auto text-center border border-gray-200 rounded-2xl p-12">
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-slate-900">
-                Hemen Başlayın
-              </h2>
-              <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-                Size en uygun aracı bulun ve hemen kiralamaya başlayın. 
-                Uzman ekibimiz size yardımcı olmak için hazır.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/login"
-                  className="bg-lime-400 text-slate-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-lime-300 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-lime-400/50"
-                >
-                  Online İşlemler
-                </Link>
-                <Link
-                  href="/iletisim"
-                  className="bg-slate-900 text-white px-10 py-4 rounded-lg font-semibold text-lg hover:bg-slate-800 transition-all duration-300 border border-slate-900"
-                >
-                  İletişime Geç
-                </Link>
-              </div>
-              <div className="mt-6">
-                <Link
-                  href="/login"
-                  className="inline-flex items-center justify-center text-slate-700 hover:text-lime-600 font-medium transition-colors"
-                >
-                  İş Ortağı Girişi
-                </Link>
+            <div className="relative overflow-hidden bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 rounded-[2.5rem] p-12 md:p-16 shadow-2xl">
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full -ml-48 -mb-48 blur-3xl"></div>
+              
+              <div className="relative z-10 max-w-4xl mx-auto text-center">
+                <div className="inline-block mb-6">
+                  <span className="bg-lime-400/20 text-lime-400 px-4 py-2 rounded-full text-sm font-bold uppercase tracking-wider">
+                    Hemen Başlayın
+                  </span>
+                </div>
+                
+                <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white mb-6 leading-tight">
+                  Size Özel Filo Çözümü<br />Bir Tık Uzağınızda
+                </h2>
+                
+                <p className="text-xl text-slate-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+                  Profesyonel ekibimiz ihtiyacınıza uygun en ekonomik ve verimli araç kiralama çözümünü hazırlamak için sizi bekliyor.
+                </p>
+                
+                <div className="flex flex-col sm:flex-row gap-5 justify-center items-center mb-8">
+                  <Link
+                    href="/login"
+                    className="group bg-lime-400 text-slate-900 px-12 py-5 rounded-xl font-bold text-lg hover:bg-lime-300 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-lime-400/30 flex items-center gap-3"
+                  >
+                    Online İşlemler
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  <Link
+                    href="/iletisim"
+                    className="bg-white/10 backdrop-blur text-white px-12 py-5 rounded-xl font-bold text-lg hover:bg-white/20 transition-all duration-300 border-2 border-white/20"
+                  >
+                    İletişime Geç
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
@@ -419,14 +511,14 @@ export default function Home() {
         {/* Latest Blog Section */}
         <section className="py-16 bg-white">
           <div className="px-6 md:px-8">
-            <div className="flex items-end justify-between gap-6 mb-10">
-              <div>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-6 mb-10">
+              <div className="flex-1">
                 <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">Blogdan Son Yazılar</h2>
                 <p className="text-gray-600 max-w-2xl">
                   Filo yönetimi, elektrikli araçlar ve operasyonel kiralama hakkında güncel içerikler.
                 </p>
               </div>
-              <Link href="/blog" className="text-lime-600 font-semibold hover:text-lime-700">
+              <Link href="/blog" className="text-lime-600 font-semibold hover:text-lime-700 whitespace-nowrap self-start md:self-auto">
                 Tümünü Gör →
               </Link>
             </div>

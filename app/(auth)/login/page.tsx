@@ -1,20 +1,49 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, TrendingUp, FileText, Bell, Calendar, Shield, Users } from 'lucide-react'
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
+  const [activeSlide, setActiveSlide] = useState(0)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   })
   const [error, setError] = useState('')
+
+  const slides = [
+    {
+      icon: TrendingUp,
+      title: 'Anlık Filo Takibi',
+      description: 'Tüm araçlarınızın konumunu, durumunu ve kullanım bilgilerini anlık olarak takip edin. Detaylı raporlarla filonuzu optimize edin.',
+      features: ['Canlı konum takibi', 'Kullanım analizi', 'Maliyet raporları']
+    },
+    {
+      icon: FileText,
+      title: 'Dijital Belge Yönetimi',
+      description: 'Sigorta, muayene, bakım kayıtları ve tüm belgeleri tek platformda yönetin. Otomatik hatırlatmalarla hiçbir süreyi kaçırmayın.',
+      features: ['Merkezi belge arşivi', 'Süre takibi', 'Otomatik bildirimler']
+    },
+    {
+      icon: Calendar,
+      title: 'Bakım ve Servis Planlaması',
+      description: 'Periyodik bakımları planlayın, servis randevularını yönetin. Araç ömrünü uzatın, maliyetleri düşürün.',
+      features: ['Bakım takvimi', 'Servis geçmişi', 'İkame araç yönetimi']
+    }
+  ]
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % slides.length)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [slides.length])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -50,41 +79,68 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row-reverse bg-white">
-      {/* Right Side - Visual/Marketing */}
-      <div className="hidden md:flex md:w-[45%] bg-[#0a1b3d] relative overflow-hidden items-center justify-center p-12">
-        {/* Decorative Grid Pattern */}
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}>
-        </div>
+      {/* Right Side - Fleet Management Features Slideshow */}
+      <div className="hidden md:flex md:w-[60%] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative overflow-hidden items-center justify-center p-12">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-96 h-96 bg-lime-400/10 rounded-full -mr-48 -mt-48 blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-400/10 rounded-full -ml-48 -mb-48 blur-3xl"></div>
         
-        <div className="relative z-10 text-center">
-          <div className="mb-12 inline-block">
-            <div className="bg-white rounded-3xl p-8 shadow-2xl transform -rotate-3">
-              <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-                <div className="flex items-center gap-2 mb-4">
-                  <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                </div>
-                <div className="space-y-3">
-                  <div className="h-4 w-48 bg-slate-200 rounded"></div>
-                  <div className="h-4 w-32 bg-slate-200 rounded"></div>
-                  <div className="grid grid-cols-3 gap-2">
-                    <div className="h-12 bg-lime-100 rounded-lg"></div>
-                    <div className="h-12 bg-blue-100 rounded-lg"></div>
-                    <div className="h-12 bg-slate-100 rounded-lg"></div>
+        <div className="relative z-10 w-full max-w-lg">
+          {/* Slides */}
+          <div className="relative min-h-[500px]">
+            {slides.map((slide, index) => {
+              const Icon = slide.icon
+              return (
+                <div
+                  key={index}
+                  className={`absolute inset-0 transition-opacity duration-700 ${
+                    activeSlide === index ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                  }`}
+                >
+                  <div className="bg-white/5 backdrop-blur-sm rounded-3xl p-8 border border-white/10">
+                    {/* Icon */}
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-lime-400 rounded-2xl mb-6">
+                      <Icon className="w-8 h-8 text-slate-900" />
+                    </div>
+                    
+                    {/* Title */}
+                    <h2 className="text-3xl font-bold text-white mb-4">
+                      {slide.title}
+                    </h2>
+                    
+                    {/* Description */}
+                    <p className="text-slate-300 text-lg leading-relaxed mb-8">
+                      {slide.description}
+                    </p>
+                    
+                    {/* Features list */}
+                    <div className="space-y-3">
+                      {slide.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-3">
+                          <div className="w-1.5 h-1.5 rounded-full bg-lime-400"></div>
+                          <span className="text-white font-medium">{feature}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <div className="h-20 w-full bg-slate-100 rounded-lg"></div>
                 </div>
-              </div>
-            </div>
+              )
+            })}
           </div>
-          <h2 className="text-2xl lg:text-3xl font-bold text-white mb-4">
-            Portföy Yöneticinize Ek Ürün ve Hizmet ya da Yeni Araç Taleplerinizi İletin!
-          </h2>
-          <div className="flex justify-center gap-2 mt-8">
-            <div className="w-2.5 h-2.5 rounded-full bg-white/40"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-white"></div>
-            <div className="w-2.5 h-2.5 rounded-full bg-white/40"></div>
+          
+          {/* Slide indicators */}
+          <div className="flex justify-center gap-2 mt-6">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                type="button"
+                onClick={() => setActiveSlide(index)}
+                className={`h-2 rounded-full transition-all ${
+                  activeSlide === index ? 'w-8 bg-lime-400' : 'w-2 bg-white/30'
+                }`}
+                aria-label={`Slide ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>

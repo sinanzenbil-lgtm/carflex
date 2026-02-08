@@ -17,7 +17,7 @@ export default function Header() {
   const navItems = [
     { href: '/', label: 'Anasayfa' },
     { href: '/hizmetlerimiz', label: 'Hizmetlerimiz' },
-    { href: '/elektrikli-araclar', label: '⚡ Elektrikli Araçlar' },
+    { href: '/elektrikli-araclar', label: 'Elektrikli Araçlar' },
     { href: '/iletisim', label: 'İletişim' },
   ]
 

@@ -13,7 +13,7 @@ export default function Footer() {
   if (pathname === '/login') return null
 
   return (
-    <footer className="bg-[#0a1b3d] text-gray-300">
+    <footer className="bg-[#0a1b3d] text-gray-300 relative z-10">
       <div className="container mx-auto px-4 py-12">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
@@ -67,7 +67,7 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/elektrikli-araclar" className="text-gray-400 hover:text-lime-400 transition-colors">
-                  ⚡ Elektrikli Araçlar
+                  Elektrikli Araçlar
                 </Link>
               </li>
               <li>

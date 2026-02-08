@@ -2,7 +2,6 @@ import { Metadata } from 'next'
 import Link from 'next/link'
 import { 
   BatteryCharging, 
-  Zap, 
   Leaf, 
   TrendingDown, 
   ShieldCheck, 
@@ -77,7 +76,7 @@ export default function ElektrikliAraclar() {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div>
               <div className="inline-flex items-center gap-2 bg-lime-400/10 text-lime-400 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-widest mb-6 border border-lime-400/20">
-                <Zap className="w-3 h-3 fill-current" />
+                <span className="font-black text-sm">E</span>
                 Geleceğin Mobilitesi
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-7xl font-extrabold text-white mb-6 leading-tight tracking-tight">
@@ -89,10 +88,10 @@ export default function ElektrikliAraclar() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
-                  href="/teklif-al"
+                  href="/filo-analizi"
                   className="bg-lime-400 text-slate-900 px-8 py-4 rounded-xl font-bold text-lg hover:bg-lime-300 transition-all transform hover:scale-105 text-center"
                 >
-                  Hemen Teklif Al
+                  Ücretsiz Analiz Al
                 </Link>
                 <Link
                   href="#neden-elektrikli"
@@ -277,7 +276,7 @@ export default function ElektrikliAraclar() {
             Ücretsiz filo analizi ve <strong>elektrikli araç kiralama fiyatları</strong> hakkında bilgi almak için hemen uzmanlarımızla görüşün.
           </p>
           <Link
-            href="/teklif-al"
+            href="/filo-analizi"
             className="inline-flex items-center gap-3 bg-slate-900 text-white px-12 py-5 rounded-2xl font-bold text-xl hover:bg-slate-800 transition-all shadow-2xl"
           >
             Ücretsiz Analiz İsteyin
