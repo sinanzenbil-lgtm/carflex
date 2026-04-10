@@ -1,12 +1,42 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
+import Script from 'next/script'
 import { notFound } from 'next/navigation'
 import { blogPosts } from '@/lib/blog'
+import { absoluteUrl, createMetadata, siteConfig } from '@/lib/seo'
 
 type BlogDetailProps = {
   params: {
     slug: string
   }
+}
+
+export function generateStaticParams() {
+  return blogPosts.map((post) => ({
+    slug: post.slug,
+  }))
+}
+
+export function generateMetadata({ params }: BlogDetailProps): Metadata {
+  const post = blogPosts.find((item) => item.slug === params.slug)
+
+  if (!post) {
+    return createMetadata({
+      title: 'Blog',
+      description: siteConfig.description,
+      path: '/blog',
+    })
+  }
+
+  return createMetadata({
+    title: post.title,
+    description: post.excerpt,
+    path: `/blog/${post.slug}`,
+    image: post.image,
+    keywords: [post.category, post.title, 'blog yazısı'],
+    type: 'article',
+  })
 }
 
 export default function BlogDetailPage({ params }: BlogDetailProps) {
@@ -22,9 +52,39 @@ export default function BlogDetailPage({ params }: BlogDetailProps) {
 
   const firstLetter = firstParagraph.charAt(0)
   const restOfFirstParagraph = firstParagraph.slice(1)
+  const articleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.excerpt,
+    image: [absoluteUrl(post.image)],
+    datePublished: new Date(post.date).toISOString(),
+    dateModified: new Date(post.date).toISOString(),
+    articleSection: post.category,
+    inLanguage: 'tr-TR',
+    mainEntityOfPage: absoluteUrl(`/blog/${post.slug}`),
+    author: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: siteConfig.name,
+      logo: {
+        '@type': 'ImageObject',
+        url: absoluteUrl('/carflex-logo.png'),
+      },
+    },
+  }
 
   return (
     <div className="min-h-screen bg-white">
+      <Script
+        id={`blog-post-jsonld-${post.slug}`}
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <article className="max-w-4xl mx-auto px-6 py-16">
         {/* Back Link */}
         <Link href="/blog" className="text-lime-600 hover:text-lime-700 text-sm font-bold mb-10 inline-block uppercase tracking-widest transition-colors">

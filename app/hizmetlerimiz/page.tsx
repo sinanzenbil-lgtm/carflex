@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import Image from 'next/image'
 import {
@@ -15,6 +16,20 @@ import {
   FileText,
   Activity,
 } from 'lucide-react'
+import { createMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = createMetadata({
+  title: 'Hizmetlerimiz',
+  description:
+    'Uzun dönem filo kiralama, kısa dönem destek, elektrikli araç programı ve operasyonel filo yönetimi hizmetlerini keşfedin.',
+  path: '/hizmetlerimiz',
+  keywords: [
+    'filo kiralama hizmetleri',
+    'uzun dönem kiralama',
+    'kısa dönem araç kiralama',
+    'operasyonel filo yönetimi',
+  ],
+})
 
 const mainServices = [
   {

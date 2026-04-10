@@ -1,12 +1,42 @@
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import { blogPosts } from '@/lib/blog'
+import Script from 'next/script'
+import { absoluteUrl, createMetadata, siteConfig } from '@/lib/seo'
+
+export const metadata: Metadata = createMetadata({
+  title: 'Blog',
+  description:
+    'CarFlex blogunda filo yönetimi, araç kiralama, elektrikli araç dönüşümü ve operasyonel verimlilik içeriklerini okuyun.',
+  path: '/blog',
+  keywords: ['araç kiralama blog', 'filo yönetimi blog', 'elektrikli araç blog'],
+})
 
 export default function BlogPage() {
   const posts = [...blogPosts].sort((a, b) => (a.date < b.date ? 1 : -1))
+  const blogListJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Blog',
+    name: `${siteConfig.name} Blog`,
+    url: absoluteUrl('/blog'),
+    inLanguage: 'tr-TR',
+    blogPost: posts.map((post) => ({
+      '@type': 'BlogPosting',
+      headline: post.title,
+      url: absoluteUrl(`/blog/${post.slug}`),
+      datePublished: new Date(post.date).toISOString(),
+      image: absoluteUrl(post.image),
+    })),
+  }
 
   return (
     <div className="min-h-screen bg-white">
+      <Script
+        id="blog-list-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(blogListJsonLd) }}
+      />
       <section className="bg-white pt-16 pb-12 border-b border-gray-100">
         <div className="max-w-4xl mx-auto px-6 text-center md:text-left">
           <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">Blog</h1>

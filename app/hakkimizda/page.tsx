@@ -1,4 +1,14 @@
+import type { Metadata } from 'next'
 import { Car, Users, Award, Target, Heart, TrendingUp } from 'lucide-react'
+import { createMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = createMetadata({
+  title: 'Hakkımızda',
+  description:
+    'CarFlex’in kurumsal araç kiralama, filo yönetimi ve elektrikli araç dönüşümü alanındaki uzmanlığını yakından tanıyın.',
+  path: '/hakkimizda',
+  keywords: ['hakkımızda', 'carflex hakkında', 'filo kiralama şirketi'],
+})
 
 export default function Hakkimizda() {
   return (

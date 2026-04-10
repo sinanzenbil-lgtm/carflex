@@ -9,17 +9,22 @@ import {
   Activity,
   BarChart3
 } from 'lucide-react'
+import { createMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
-  title: 'Elektrikli Araç Kiralama ve Filo Dönüşümü | CarFlex',
-  description: 'Şirketiniz için en uygun elektrikli araç kiralama çözümleri. %70 yakıt tasarrufu, sıfır emisyon ve kurumsal elektrikli filo dönüşüm programı ile tanışın.',
-  keywords: 'elektrikli araç kiralama, elektrikli filo kiralama, kurumsal elektrikli araç, elektrikli araç avantajları, filo dönüşümü, elektrikli araç kiralama fiyatları',
-  openGraph: {
-    title: 'Elektrikli Araç Kiralama ve Filo Dönüşümü | CarFlex',
-    description: 'Kurumsal filonuzu elektrikli araçlarla geleceğe taşıyın. Tasarruf ve sürdürülebilirlik bir arada.',
-    images: ['/slide-3.png'],
-  }
-}
+export const metadata: Metadata = createMetadata({
+  title: 'Elektrikli Araç Kiralama ve Filo Dönüşümü',
+  description:
+    'Kurumsal elektrikli araç kiralama çözümleri, maliyet avantajları ve filo dönüşüm programı ile CarFlex sürdürülebilir mobilite sunar.',
+  path: '/elektrikli-araclar',
+  keywords: [
+    'elektrikli araç kiralama',
+    'elektrikli filo kiralama',
+    'kurumsal elektrikli araç',
+    'filo dönüşümü',
+    'elektrikli araç avantajları',
+  ],
+  image: '/slide-3.png',
+})
 
 export default function ElektrikliAraclar() {
   const advantages = [

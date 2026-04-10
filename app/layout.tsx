@@ -1,15 +1,76 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
 import Header from './components/Header'
 import Footer from './components/Footer'
+import {
+  absoluteUrl,
+  getOrganizationJsonLd,
+  getWebsiteJsonLd,
+  siteConfig,
+} from '@/lib/seo'
 
 const inter = Inter({ subsets: ['latin'] })
+const siteJsonLd = [getWebsiteJsonLd(), getOrganizationJsonLd()]
 
 export const metadata: Metadata = {
-  title: 'CarFlex - Profesyonel Araç Kiralama Hizmetleri',
-  description: 'Uzun ve kısa dönem araç kiralama hizmetleri. İşletmeniz için en uygun fiyatlarla, esnek ve güvenilir çözümler.',
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} | ${siteConfig.defaultTitle}`,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  applicationName: siteConfig.name,
+  referrer: 'origin-when-cross-origin',
+  keywords: [...siteConfig.keywords],
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  publisher: siteConfig.name,
+  category: 'car rental',
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: siteConfig.locale,
+    url: '/',
+    siteName: siteConfig.name,
+    title: `${siteConfig.name} | ${siteConfig.defaultTitle}`,
+    description: siteConfig.description,
+    images: [
+      {
+        url: absoluteUrl(siteConfig.ogImage),
+        width: 1200,
+        height: 630,
+        alt: `${siteConfig.name} kurumsal araç kiralama`,
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${siteConfig.name} | ${siteConfig.defaultTitle}`,
+    description: siteConfig.description,
+    images: [absoluteUrl(siteConfig.ogImage)],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  manifest: '/manifest.webmanifest',
+  other: {
+    'geo.region': 'TR-34',
+    'geo.placename': 'Istanbul',
+    'geo.position': '41.0256;29.0152',
+    ICBM: '41.0256, 29.0152',
+  },
   icons: {
     icon: [
       { url: '/favicon.ico' },
@@ -18,6 +79,13 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: '/apple-touch-icon.png', sizes: '180x180' }],
   },
+}
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  themeColor: '#0f172a',
+  colorScheme: 'light',
 }
 
 export default function RootLayout({
@@ -40,6 +108,11 @@ export default function RootLayout({
             ym(108490297, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
           `}
         </Script>
+        <Script
+          id="site-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+        />
         <noscript>
           <div>
             <img
