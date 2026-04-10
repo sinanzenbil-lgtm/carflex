@@ -9,7 +9,6 @@ Disallow: /admin/
 Disallow: /api/
 
 Sitemap: ${siteConfig.url}/sitemap.xml
-Host: ${siteConfig.url}
 `
 
   return new Response(body, {
